@@ -9,12 +9,16 @@ import android.widget.Toast;
 import com.mvvm.x930073498.BaseViewModelLib.core.ActivityDataBindingProvider;
 import com.mvvm.x930073498.BaseViewModelLib.core.ContextToastInvocationHandler;
 import com.mvvm.x930073498.BaseViewModelLib.core.ContextToastProvider;
+import com.mvvm.x930073498.BaseViewModelLib.core.MapProvider;
 import com.mvvm.x930073498.BaseViewModelLib.core.ToastDuration;
 import com.x930073498.baseviewmodel.databinding.ActivityMainBinding;
 
+import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
-public class MainActivity extends AppCompatActivity implements ActivityDataBindingProvider<ActivityMainBinding>, ContextToastProvider {
+public class MainActivity extends AppCompatActivity implements ActivityDataBindingProvider<ActivityMainBinding>, ContextToastProvider
+,MapProvider
+{
     ActivityMainBinding binding;
     ContextToastProvider provider;
     private static final String TAG = "MainActivity";
@@ -62,5 +66,15 @@ public class MainActivity extends AppCompatActivity implements ActivityDataBindi
 
     public void onClick(View view) {
         provider.showToast("测试");
+    }
+
+    @Override
+    public void put(Object key, Object value) {
+
+    }
+
+    @Override
+    public Object get(Object key) {
+        return null;
     }
 }

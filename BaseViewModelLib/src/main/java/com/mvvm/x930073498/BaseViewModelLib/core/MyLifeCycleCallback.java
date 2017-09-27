@@ -10,7 +10,9 @@ import java.lang.reflect.Proxy;
 
 public class MyLifeCycleCallback implements Application.ActivityLifecycleCallbacks {
     private Application application;
+    private MapProvider provider;
 
+    //利用动态代理去实现put get方法
     protected MyLifeCycleCallback(Application application) {
         this.application = application;
     }
@@ -18,6 +20,7 @@ public class MyLifeCycleCallback implements Application.ActivityLifecycleCallbac
     @Override
     public void onActivityCreated(Activity activity, Bundle bundle) {
         registerContextToastProvider(activity);
+        provider = registerMapProvider(activity);
         if (activity instanceof DataBindingLayoutProvider) {
             ViewDataBinding binding;
             if (activity instanceof ViewDataBindingProvider) {
@@ -64,5 +67,14 @@ public class MyLifeCycleCallback implements Application.ActivityLifecycleCallbac
         if (activity instanceof ContextToastProvider) {
             Proxy.newProxyInstance(activity.getClassLoader(), new Class[]{ContextToastProvider.class}, ContextToastInvocationHandler.create(application, (ContextToastProvider) activity));
         }
+    }
+
+    private MapProvider registerMapProvider(Activity activity) {
+        if (activity instanceof MapProvider) {
+            MapProvider provider = (MapProvider) Proxy.newProxyInstance(activity.getClassLoader(), new Class[]{MapProvider.class}, MapProviderInvocationHandler.create(application, (MapProvider) activity));
+            provider.put(MapProvider.class, provider);
+            return provider;
+        }
+        return null;
     }
 }
