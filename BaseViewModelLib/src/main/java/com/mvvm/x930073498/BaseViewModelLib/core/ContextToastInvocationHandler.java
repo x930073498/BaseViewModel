@@ -1,6 +1,7 @@
 package com.mvvm.x930073498.BaseViewModelLib.core;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.lang.reflect.InvocationHandler;
@@ -12,9 +13,12 @@ import java.lang.reflect.Method;
 
 public class ContextToastInvocationHandler implements InvocationHandler, ContextToastProvider {
     Context context;
+    private static final String TAG = "ContextToast";
+    ContextToastProvider provider;
 
-    protected ContextToastInvocationHandler(Context context) {
+    public ContextToastInvocationHandler(Context context, ContextToastProvider provider) {
         this.context = context;
+        this.provider = provider;
     }
 
     @Override
@@ -22,10 +26,12 @@ public class ContextToastInvocationHandler implements InvocationHandler, Context
         if (objects != null) {
             if (objects.length == 1) {
                 showToast(objects[0].toString());
-                return method.invoke(o, objects);
+                provider.showToast(objects[0].toString());
+                return null;
             } else {
                 showToast((CharSequence) objects[0], (int) objects[1]);
-                return method.invoke(o, objects);
+                provider.showToast((CharSequence) objects[0], (int) objects[1]);
+                return null;
             }
         } else return method.invoke(o, objects);
     }

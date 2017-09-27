@@ -59,7 +59,7 @@ public class MyLifeCycleCallback implements Application.ActivityLifecycleCallbac
 
     private void registerContextToastProvider(Activity activity) {
         if (activity instanceof ContextToastProvider) {
-            Proxy.newProxyInstance(activity.getClassLoader(), new Class[]{ContextToastProvider.class}, new ContextToastInvocationHandler(application));
+                    Proxy.newProxyInstance(activity.getClassLoader(), new Class[]{ContextToastProvider.class}, new ContextToastInvocationHandler(application, (ContextToastProvider) activity));
         }
     }
 }
