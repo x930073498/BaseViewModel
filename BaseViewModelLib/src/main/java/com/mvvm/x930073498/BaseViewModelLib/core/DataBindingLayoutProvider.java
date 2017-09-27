@@ -10,4 +10,8 @@ public interface DataBindingLayoutProvider {
     @LayoutRes
     int layout();
 
+    int NO_ID = 0;
+
+    int variableId() ;
+
 }

@@ -22,15 +22,26 @@ public class MainActivity extends AppCompatActivity implements ActivityDataBindi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        provider = (ContextToastProvider) Proxy.newProxyInstance(getClassLoader(), new Class[]{ContextToastProvider.class}, new ContextToastInvocationHandler(this, this));
-        binding.setActivity(this);
 
+        provider = (ContextToastProvider) Proxy.newProxyInstance(getClassLoader(), new Class[]{ContextToastProvider.class}, ContextToastInvocationHandler.create(this, this));
+        Log.d(TAG, "onCreate: " + Proxy.getProxyClass(getClassLoader(), getClass().getInterfaces()));
+        Log.d(TAG, "onCreate: enter this line");
+        try {
+            Proxy.getInvocationHandler(provider).invoke(this, getClass().getMethod("showToast", CharSequence.class), new Object[]{"测试"});
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 
 
     @Override
     public int layout() {
         return R.layout.activity_main;
+    }
+
+    @Override
+    public int variableId() {
+        return BR.activity;
     }
 
     @Override

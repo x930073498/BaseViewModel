@@ -16,4 +16,9 @@ public class TestViewModel implements BaseViewModel {
     public int layout() {
         return 0;
     }
+
+    @Override
+    public int variableId() {
+        return 0;
+    }
 }

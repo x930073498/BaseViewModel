@@ -19,11 +19,14 @@ public class MyLifeCycleCallback implements Application.ActivityLifecycleCallbac
     public void onActivityCreated(Activity activity, Bundle bundle) {
         registerContextToastProvider(activity);
         if (activity instanceof DataBindingLayoutProvider) {
+            ViewDataBinding binding;
             if (activity instanceof ViewDataBindingProvider) {
-                ((ViewDataBindingProvider<ViewDataBinding>) activity).provideViewDataBinding(DataBindingUtil.setContentView(activity, ((DataBindingLayoutProvider) activity).layout()));
+                ((ViewDataBindingProvider<ViewDataBinding>) activity).provideViewDataBinding((binding = DataBindingUtil.setContentView(activity, ((DataBindingLayoutProvider) activity).layout())));
             } else {
-                DataBindingUtil.setContentView(activity, ((DataBindingLayoutProvider) activity).layout());
+                binding = DataBindingUtil.setContentView(activity, ((DataBindingLayoutProvider) activity).layout());
             }
+            if (((DataBindingLayoutProvider) activity).variableId() != DataBindingLayoutProvider.NO_ID)
+                binding.setVariable(((DataBindingLayoutProvider) activity).variableId(), activity);
         }
     }
 
@@ -59,7 +62,7 @@ public class MyLifeCycleCallback implements Application.ActivityLifecycleCallbac
 
     private void registerContextToastProvider(Activity activity) {
         if (activity instanceof ContextToastProvider) {
-                    Proxy.newProxyInstance(activity.getClassLoader(), new Class[]{ContextToastProvider.class}, new ContextToastInvocationHandler(application, (ContextToastProvider) activity));
+            Proxy.newProxyInstance(activity.getClassLoader(), new Class[]{ContextToastProvider.class}, ContextToastInvocationHandler.create(application, (ContextToastProvider) activity));
         }
     }
 }

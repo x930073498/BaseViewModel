@@ -1,12 +1,14 @@
 apply plugin: 'com.android.library'
-
+apply plugin: 'android-aspectjx'
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.1"
     dataBinding{
         enabled=true
     }
-
+    aspectjx {
+        excludeJarFilter '.jar'
+    }
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 26

@@ -12,13 +12,17 @@ import java.lang.reflect.Method;
  */
 
 public class ContextToastInvocationHandler implements InvocationHandler, ContextToastProvider {
-    Context context;
     private static final String TAG = "ContextToast";
-    ContextToastProvider provider;
+    private ContextToastProvider provider;
+    private static Toast toast;
 
-    public ContextToastInvocationHandler(Context context, ContextToastProvider provider) {
-        this.context = context;
+    private ContextToastInvocationHandler(Context context, ContextToastProvider provider) {
         this.provider = provider;
+        if (toast == null)
+            toast = Toast.makeText(context.getApplicationContext(), "init", Toast.LENGTH_SHORT);
+    }
+    public static ContextToastInvocationHandler create(Context context,ContextToastProvider provider){
+        return new ContextToastInvocationHandler(context, provider);
     }
 
     @Override
@@ -33,12 +37,14 @@ public class ContextToastInvocationHandler implements InvocationHandler, Context
                 provider.showToast((CharSequence) objects[0], (int) objects[1]);
                 return null;
             }
-        } else return method.invoke(o, objects);
+        } else return method.invoke(o, (Object[]) null);
     }
 
     @Override
     public void showToast(CharSequence msg, @ToastDuration int duration) {
-        Toast.makeText(context, msg, duration).show();
+        toast.setDuration(duration);
+        toast.setText(msg);
+        toast.show();
     }
 
     @Override
