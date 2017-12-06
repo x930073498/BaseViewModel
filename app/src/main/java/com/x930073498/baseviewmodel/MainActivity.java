@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity implements ActivityDataBindi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         toast("test", Toast.LENGTH_SHORT);
+
     }
 
 

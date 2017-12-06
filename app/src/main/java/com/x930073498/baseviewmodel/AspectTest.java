@@ -18,6 +18,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Hashtable;
 
 @Aspect
 public class AspectTest {
@@ -89,25 +90,24 @@ public class AspectTest {
         return target;
     }
 
+    private static Hashtable<Class<?>, Class<?>> prims = new Hashtable<>();
+
+    static {
+        prims.put(void.class, Void.class);
+        prims.put(boolean.class, Boolean.class);
+        prims.put(byte.class, Byte.class);
+        prims.put(char.class, Character.class);
+        prims.put(short.class, Short.class);
+        prims.put(int.class, Integer.class);
+        prims.put(long.class, Long.class);
+        prims.put(float.class, Float.class);
+        prims.put(double.class, Double.class);
+    }
+
     @NonNull
     private Class getPrimitiveClass(Class targetClass) {
-        Class temp = targetClass;
-        if (temp.isPrimitive()) {
-            if (temp == int.class) {
-                temp = Integer.class;
-            } else if (temp == short.class) {
-                temp = Short.class;
-            } else if (temp == char.class) {
-                temp = Character.class;
-            } else if (temp == byte.class) {
-                temp = Byte.class;
-            } else if (temp == long.class) {
-                temp = Long.class;
-            } else if (temp == float.class) {
-                temp = Float.class;
-            }
-        }
-        return temp;
+        Class<?> result= prims.get(targetClass);
+        return result==null?targetClass:result;
     }
 
 //    @After("execution(* com.mvvm.x930073498.BaseViewModelLib.core.ContextToastProvider.**(..))")
