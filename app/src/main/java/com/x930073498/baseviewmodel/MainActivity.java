@@ -2,23 +2,15 @@ package com.x930073498.baseviewmodel;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.mvvm.x930073498.BaseViewModelLib.core.ActivityDataBindingProvider;
-import com.mvvm.x930073498.BaseViewModelLib.core.ContextToastInvocationHandler;
 import com.mvvm.x930073498.BaseViewModelLib.core.ContextToastProvider;
-import com.mvvm.x930073498.BaseViewModelLib.core.MapProvider;
-import com.mvvm.x930073498.BaseViewModelLib.core.ToastDuration;
+import com.mvvm.x930073498.BaseViewModelLib.core.annotation.InjectMethod;
 import com.x930073498.baseviewmodel.databinding.ActivityMainBinding;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-
-public class MainActivity extends AppCompatActivity implements ActivityDataBindingProvider<ActivityMainBinding>, ContextToastProvider
-,MapProvider
-{
+public class MainActivity extends AppCompatActivity implements ActivityDataBindingProvider<ActivityMainBinding> {
     ActivityMainBinding binding;
     ContextToastProvider provider;
     private static final String TAG = "MainActivity";
@@ -26,15 +18,7 @@ public class MainActivity extends AppCompatActivity implements ActivityDataBindi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        provider = (ContextToastProvider) Proxy.newProxyInstance(getClassLoader(), new Class[]{ContextToastProvider.class}, ContextToastInvocationHandler.create(this, this));
-        Log.d(TAG, "onCreate: " + Proxy.getProxyClass(getClassLoader(), getClass().getInterfaces()));
-        Log.d(TAG, "onCreate: enter this line");
-        try {
-            Proxy.getInvocationHandler(provider).invoke(this, getClass().getMethod("showToast", CharSequence.class), new Object[]{"测试"});
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-        }
+        toast("test", Toast.LENGTH_SHORT);
     }
 
 
@@ -53,28 +37,18 @@ public class MainActivity extends AppCompatActivity implements ActivityDataBindi
         binding = dataBinding;
     }
 
-    @Override
-    public void showToast(CharSequence msg, @ToastDuration int duration) {
-        Log.d(TAG, "showToast: enter this line1");
-    }
-
-    @Override
-    public void showToast(CharSequence msg) {
-        Log.d(TAG, "showToast: enter this line2");
-
-    }
 
     public void onClick(View view) {
         provider.showToast("测试");
     }
 
-    @Override
-    public void put(Object key, Object value) {
+    @InjectMethod(value = ToastProvider.class,methodName = "showToast")
+    public void toast(CharSequence msg, int duration) {
 
     }
 
-    @Override
-    public Object get(Object key) {
-        return null;
+    @InjectMethod(value = ToastProvider.class,methodName = "showToast")
+    public void toast(CharSequence msg) {
+
     }
 }

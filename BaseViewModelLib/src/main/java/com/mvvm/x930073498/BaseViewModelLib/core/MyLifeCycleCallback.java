@@ -5,10 +5,12 @@ import android.app.Application;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
+import android.util.Log;
 
 import java.lang.reflect.Proxy;
 
 public class MyLifeCycleCallback implements Application.ActivityLifecycleCallbacks {
+    private static final String TAG = "MyLifeCycleCallback";
     private Application application;
     private MapProvider provider;
 
@@ -19,6 +21,7 @@ public class MyLifeCycleCallback implements Application.ActivityLifecycleCallbac
 
     @Override
     public void onActivityCreated(Activity activity, Bundle bundle) {
+        Log.d(TAG, "onActivityCreated: ");
         registerContextToastProvider(activity);
         provider = registerMapProvider(activity);
         if (activity instanceof DataBindingLayoutProvider) {
@@ -64,9 +67,6 @@ public class MyLifeCycleCallback implements Application.ActivityLifecycleCallbac
     }
 
     private void registerContextToastProvider(Activity activity) {
-        if (activity instanceof ContextToastProvider) {
-            Proxy.newProxyInstance(activity.getClassLoader(), new Class[]{ContextToastProvider.class}, ContextToastInvocationHandler.create(application, (ContextToastProvider) activity));
-        }
     }
 
     private MapProvider registerMapProvider(Activity activity) {
