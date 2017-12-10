@@ -48,8 +48,8 @@ public class MainActivity extends AppCompatActivity implements ActivityDataBindi
 
     }
 
-    @InjectMethod(value = ToastProvider.class,methodName = "showToast")
-    public void toast(CharSequence msg) {
+    @InjectMethod(value = ToastProvider.class)
+    public void showToast(CharSequence msg) {
 
     }
 }
